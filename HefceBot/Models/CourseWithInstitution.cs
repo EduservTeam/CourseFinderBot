@@ -4,6 +4,25 @@
     {
         public Institution Institution { get; set; }
 
+        public string WebUrl
+        {
+            get
+            {
+                string kisMode;
+                switch (KisMode)
+                {
+                    case "FullTime":
+                        kisMode = "FT";
+                        break;
+                    case "PartTime":
+                        kisMode = "PT";
+                        break;
+                }
+
+                return $"http://unistats.ac.uk/Subjects/Overview/{Institution.PUBUKPRN}{kisMode}-{KisCourseId}";
+            }
+        }
+
         public CourseWithInstitution(Course course)
         {
             ApiUrl = course.ApiUrl;

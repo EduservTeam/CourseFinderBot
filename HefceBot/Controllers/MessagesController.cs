@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using HefceBot.Models;
+using HefceBot.Services;
 using Microsoft.Bot.Connector;
 //using Microsoft.Bot.Connector.Utilities;
 using Newtonsoft.Json;
@@ -16,6 +18,13 @@ namespace HefceBot.Controllers
     [BotAuthentication]
     public class MessagesController : ApiController
     {
+        private IUnistatsService _unistatsService;
+
+        public MessagesController(IUnistatsService unistatsService)
+        {
+            _unistatsService = unistatsService;
+        }
+
         internal static IDialog<HefceUserSearchRequest> MakeRootDialog()
         {
 
@@ -57,7 +66,7 @@ namespace HefceBot.Controllers
                 //int length = (message.Text ?? string.Empty).Length;
                 // return our reply to the user
                 //return message.CreateReplyMessage($"You sent {length} characters");
-
+                var responseFromLewis = await LuisResponse.ParseUserInput(message.Text);
                 //if (message.Text == "yes")
                 //{
  
