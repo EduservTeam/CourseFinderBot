@@ -17,8 +17,6 @@ namespace HefceBot.Controllers
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        internal static IDialog<HefceUserSearchRequest> MakeRootDialog()
-
         private IUnistatsService _unistatsService;
 
         public MessagesController(IUnistatsService unistatsService)
