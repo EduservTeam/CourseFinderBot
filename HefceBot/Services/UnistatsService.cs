@@ -4,19 +4,23 @@ using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Chronic;
 using HefceBot.Models;
 
 namespace HefceBot.Services
 {
-    public class UnistatsService : IDisposable
+    public class UnistatsService : IUnistatsService
     {
+        private readonly ICacheService _cacheService;
+
         private HttpClient _client;
 
-        public UnistatsService()
+        public UnistatsService(ICacheService cacheService)
         {
+            _cacheService = cacheService;
+
             var unistatsEndpoint = ConfigurationManager.AppSettings["UnistatsEndpoint"];
             var unistatsAuthKey = ConfigurationManager.AppSettings["UnistatsAuthKey"];
 
@@ -27,7 +31,6 @@ namespace HefceBot.Services
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", encodedAuth);
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
         }
 
         public IEnumerable<Institution> GetInstitutions()
@@ -58,6 +61,11 @@ namespace HefceBot.Services
         }
 
         public IEnumerable<CourseWithInstitution> GetAllCourses()
+        {
+            return _cacheService.GetOrSet<IEnumerable<CourseWithInstitution>>("AllCourses", GetAllCoursesFromApi);
+        }
+
+        private IEnumerable<CourseWithInstitution> GetAllCoursesFromApi()
         {
             var courses = new List<CourseWithInstitution>();
 

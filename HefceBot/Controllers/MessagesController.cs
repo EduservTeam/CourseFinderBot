@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using HefceBot.Services;
 using Microsoft.Bot.Connector;
 //using Microsoft.Bot.Connector.Utilities;
 using Newtonsoft.Json;
@@ -17,6 +18,15 @@ namespace HefceBot.Controllers
     public class MessagesController : ApiController
     {
         internal static IDialog<HefceUserSearchRequest> MakeRootDialog()
+
+        private IUnistatsService _unistatsService;
+
+        public MessagesController(IUnistatsService unistatsService)
+        {
+            _unistatsService = unistatsService;
+        }
+
+        internal static IDialog<SandwichOrder> MakeRootDialog()
         {
 
             return Chain.From(() => FormDialog.FromForm(HefceUserSearchRequest.BuildForm));
