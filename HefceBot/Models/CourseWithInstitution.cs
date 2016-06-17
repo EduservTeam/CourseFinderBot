@@ -8,7 +8,7 @@
         {
             get
             {
-                string kisMode;
+                string kisMode = string.Empty;
                 switch (KisMode)
                 {
                     case "FullTime":
