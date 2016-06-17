@@ -19,7 +19,26 @@ namespace HefceBot.Controllers
         internal static IDialog<HefceUserSearchRequest> MakeRootDialog()
         {
 
-            return Chain.From(() => FormDialog.FromForm(HefceUserSearchRequest.BuildForm));
+            return Chain.From(() => FormDialog.FromForm(HefceUserSearchRequest.BuildForm))
+                .Do(async (context, order) =>
+                {
+                    try
+                    {
+                        var completed = await order;
+
+                        var attendanceType = completed.AttendanceType;
+                        var institutionSearchTerm = completed.InstitutionSearchText;
+                        var courseSearchText = completed.CourseSearchText;
+
+                        // DO JULIANS CODE
+
+                        await context.PostAsync("Done");
+                    }
+                    catch (FormCanceledException<HefceUserSearchRequest> e)
+                    {
+
+                    }
+                });
 
         }
 
@@ -38,6 +57,13 @@ namespace HefceBot.Controllers
                 //int length = (message.Text ?? string.Empty).Length;
                 // return our reply to the user
                 //return message.CreateReplyMessage($"You sent {length} characters");
+
+                //if (message.Text == "yes")
+                //{
+ 
+                //}
+
+
                 return await Conversation.SendAsync(message, MakeRootDialog);
 
             }
@@ -74,6 +100,7 @@ namespace HefceBot.Controllers
             }
             else if (message.Type == "EndOfConversation")
             {
+                var robin = 1;
             }
 
             return null;

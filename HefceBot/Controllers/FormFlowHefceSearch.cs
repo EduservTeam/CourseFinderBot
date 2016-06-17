@@ -26,22 +26,20 @@ namespace HefceBot.Controllers
 
         public static IForm<HefceUserSearchRequest> BuildForm()
         {
-            //OnCompletionAsyncDelegate<HefceUserSearchRequest> processOrder = async (context, state) =>
 
-            //{
-
-            //    await context.PostAsync(state.);
-
-            //};
-
-
+            OnCompletionAsyncDelegate<HefceUserSearchRequest> processOrder = async (context, state) =>
+            {
+                Microsoft.Bot.Connector.Message a = new Microsoft.Bot.Connector.Message(); 
+                await context.PostAsync(a);
+                //await context.PostAsync(context.MakeMessage());
+            };
 
             return new FormBuilder<HefceUserSearchRequest>()
 
                         .Message("Welcome to the Hefce search assistant.")
                         //.AddRemainingFields()
                         //.Message("The results are...")
-
+                        .OnCompletionAsync(processOrder)
                         .Build();
 
         }
