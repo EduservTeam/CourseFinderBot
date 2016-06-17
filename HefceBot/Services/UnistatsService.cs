@@ -1,45 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Chronic;
 using HefceBot.Models;
 
 namespace HefceBot.Services
 {
-    public class UnistatsService
+    public class UnistatsService : IDisposable
     {
-        private readonly string _unistatsEndpoint;
-        private readonly string _unistatsAuthKey;
+        private HttpClient _client;
 
         public UnistatsService()
         {
-            _unistatsEndpoint = ConfigurationManager.AppSettings["UnistatsEndpoint"];
-            _unistatsAuthKey = ConfigurationManager.AppSettings["UnistatsAuthKey"];
+            var unistatsEndpoint = ConfigurationManager.AppSettings["UnistatsEndpoint"];
+            var unistatsAuthKey = ConfigurationManager.AppSettings["UnistatsAuthKey"];
+
+            var auth = $"{unistatsAuthKey}:";
+            var encodedAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes(auth));
+
+            _client = new HttpClient {BaseAddress = new Uri(unistatsEndpoint)};
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", encodedAuth);
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
         }
 
         public IEnumerable<Institution> GetInstitutions()
         {
-            string auth = $"{_unistatsAuthKey}:";
-            var encodedAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes(auth));
+            var response = _client.GetAsync("Institutions?pageSize=1000").Result;
 
-            using (var client = new HttpClient())
+            return response.IsSuccessStatusCode 
+                ? response.Content.ReadAsAsync<IEnumerable<Institution>>().Result 
+                : null;
+        }
+
+        public Institution GetInstitution(string pubukprn)
+        {
+            var response = _client.GetAsync($"Institution/{pubukprn}").Result;
+
+            return response.IsSuccessStatusCode
+                ? response.Content.ReadAsAsync<Institution>().Result
+                : null;
+        }
+
+        public IEnumerable<Course> GetCoursesForInstitution(string pubukprn)
+        {
+            var response = _client.GetAsync($"Institution/{pubukprn}/Courses?pageSize=1000").Result;
+
+            return response.IsSuccessStatusCode
+                ? response.Content.ReadAsAsync<IEnumerable<Course>>().Result
+                : null;
+        }
+
+        public IEnumerable<CourseWithInstitution> GetAllCourses()
+        {
+            var courses = new List<CourseWithInstitution>();
+
+            var institutions = GetInstitutions();
+            if (institutions == null) return null;
+
+            institutions.ForEach(i =>
             {
-                client.BaseAddress = new Uri(_unistatsEndpoint);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", encodedAuth);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                var response = client.GetAsync("Institutions").Result;
-                if (response.IsSuccessStatusCode)
+                var institutionCourses = GetCoursesForInstitution(i.PUBUKPRN);
+                if (institutionCourses != null)
                 {
-                    return response.Content.ReadAsAsync<IEnumerable<Institution>>().Result;
+                    courses.AddRange(institutionCourses.Select(c => new CourseWithInstitution(c) {Institution = i}));
                 }
-            }
+            });
 
-            return null;
+            return courses;
+        }
+
+        public void Dispose()
+        {
+            _client = null;
         }
     }
 }
