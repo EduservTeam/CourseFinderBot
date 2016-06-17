@@ -50,7 +50,7 @@ namespace HefceBot.Controllers
                             courses = _unistatsService.GetTopCourses(institutionSearchTerm, courseSearchText, attendanceType);
                         }
 
-                        string x = $"Try these course suggestions {string.Join(" ", courses.Select(c => c.WebUrl ?? ""))}";
+                        string x = $"Try these course suggestions: \n\n{string.Join("\n\n", courses.Select(c => $"{c.Title} at {c.Institution.Name}: {c.WebUrl ?? ""}"))}";
 
                         await context.PostAsync(x);
                     }
