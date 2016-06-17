@@ -11,17 +11,18 @@ using Newtonsoft.Json;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 
-namespace Bot_Application1
+namespace HefceBot.Controllers
 {
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        internal static IDialog<SandwichOrder> MakeRootDialog()
+        internal static IDialog<HefceUserSearchRequest> MakeRootDialog()
         {
 
-            return Chain.From(() => FormDialog.FromForm(SandwichOrder.BuildForm));
+            return Chain.From(() => FormDialog.FromForm(HefceUserSearchRequest.BuildForm));
 
         }
+
 
 
 

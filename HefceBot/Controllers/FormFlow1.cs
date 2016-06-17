@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 // in a conversation.
 
-namespace Bot_Application1
+namespace HefceBot.Controllers
 
 {
 
