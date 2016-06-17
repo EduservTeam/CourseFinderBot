@@ -5,25 +5,32 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using HefceBot;
-using HefceBot.Models;
+using HefceBot.Services;
 using Microsoft.Bot.Connector;
 //using Microsoft.Bot.Connector.Utilities;
 using Newtonsoft.Json;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 
-namespace Bot_Application1
+namespace HefceBot.Controllers
 {
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        internal static IDialog<SandwichOrder> MakeRootDialog()
+        private IUnistatsService _unistatsService;
+
+        public MessagesController(IUnistatsService unistatsService)
+        {
+            _unistatsService = unistatsService;
+        }
+
+        internal static IDialog<HefceUserSearchRequest> MakeRootDialog()
         {
 
-            return Chain.From(() => FormDialog.FromForm(SandwichOrder.BuildForm));
+            return Chain.From(() => FormDialog.FromForm(HefceUserSearchRequest.BuildForm));
 
         }
+
 
 
 
@@ -35,10 +42,6 @@ namespace Bot_Application1
         {
             if (message.Type == "Message")
             {
-                UniLuis responseFromLuis = await LuisResponse.ParseUserInput(message.Text);
-
-                
-
                 // calculate something for us to return
                 //int length = (message.Text ?? string.Empty).Length;
                 // return our reply to the user
