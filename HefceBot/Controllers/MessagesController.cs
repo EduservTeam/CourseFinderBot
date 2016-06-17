@@ -6,14 +6,25 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
-using Microsoft.Bot.Connector.Utilities;
+//using Microsoft.Bot.Connector.Utilities;
 using Newtonsoft.Json;
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 
-namespace HefceBot
+namespace Bot_Application1
 {
     [BotAuthentication]
     public class MessagesController : ApiController
     {
+        internal static IDialog<SandwichOrder> MakeRootDialog()
+        {
+
+            return Chain.From(() => FormDialog.FromForm(SandwichOrder.BuildForm));
+
+        }
+
+
+
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -23,10 +34,11 @@ namespace HefceBot
             if (message.Type == "Message")
             {
                 // calculate something for us to return
-                int length = (message.Text ?? string.Empty).Length;
-
+                //int length = (message.Text ?? string.Empty).Length;
                 // return our reply to the user
-                return message.CreateReplyMessage($"Hello!");
+                //return message.CreateReplyMessage($"You sent {length} characters");
+                return await Conversation.SendAsync(message, MakeRootDialog);
+
             }
             else
             {

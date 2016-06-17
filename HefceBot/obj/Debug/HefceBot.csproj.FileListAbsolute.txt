@@ -2,7 +2,6 @@ e:\git\HackDays\HefceBot\HefceBot\bin\HefceBot.dll.config
 e:\git\HackDays\HefceBot\HefceBot\bin\HefceBot.dll
 e:\git\HackDays\HefceBot\HefceBot\bin\HefceBot.pdb
 e:\git\HackDays\HefceBot\HefceBot\bin\Microsoft.Bot.Connector.dll
-e:\git\HackDays\HefceBot\HefceBot\bin\Microsoft.Bot.Connector.Utilities.dll
 e:\git\HackDays\HefceBot\HefceBot\bin\Microsoft.Rest.ClientRuntime.dll
 e:\git\HackDays\HefceBot\HefceBot\bin\Microsoft.WindowsAzure.Configuration.dll
 e:\git\HackDays\HefceBot\HefceBot\bin\Newtonsoft.Json.dll
@@ -18,3 +17,16 @@ e:\git\HackDays\HefceBot\HefceBot\bin\System.Web.Http.WebHost.xml
 e:\git\HackDays\HefceBot\HefceBot\obj\Debug\HefceBot.csprojResolveAssemblyReference.cache
 e:\git\HackDays\HefceBot\HefceBot\obj\Debug\HefceBot.dll
 e:\git\HackDays\HefceBot\HefceBot\obj\Debug\HefceBot.pdb
+e:\git\HackDays\HefceBot\HefceBot\bin\Autofac.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\Chronic.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\Microsoft.Bot.Builder.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\Autofac.xml
+e:\git\HackDays\HefceBot\HefceBot\bin\Microsoft.Bot.Builder.xml
+e:\git\HackDays\HefceBot\HefceBot\bin\ar\Microsoft.Bot.Builder.resources.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\en\Microsoft.Bot.Builder.resources.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\es\Microsoft.Bot.Builder.resources.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\fa\Microsoft.Bot.Builder.resources.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\fr\Microsoft.Bot.Builder.resources.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\ja\Microsoft.Bot.Builder.resources.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\ru\Microsoft.Bot.Builder.resources.dll
+e:\git\HackDays\HefceBot\HefceBot\bin\zh-hans\Microsoft.Bot.Builder.resources.dll
