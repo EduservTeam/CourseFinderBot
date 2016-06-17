@@ -67,13 +67,25 @@ namespace HefceBot.Controllers
                 // return our reply to the user
                 //return message.CreateReplyMessage($"You sent {length} characters");
                 var responseFromLewis = await LuisResponse.ParseUserInput(message.Text);
-                //if (message.Text == "yes")
-                //{
- 
-                //}
-
+                if (responseFromLewis.intents.Any())
+                {
+                    switch (responseFromLewis.intents[0].intent)
+                    {
+                        case "FindUni":
+                            message.Text = responseFromLewis.entities[0].entity;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    return message.CreateReplyMessage("Sorry, I don't understand..."); ;
+                }
 
                 return await Conversation.SendAsync(message, MakeRootDialog);
+
+
 
             }
             else
