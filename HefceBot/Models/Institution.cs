@@ -4,8 +4,8 @@
     {
         public string ApiUrl { get; set; }
         public string Country { get; set; }
-        public int NSSQuestion24 { get; set; }
-        public int NSSQuestion24Population { get; set; }
+        public int? NSSQuestion24 { get; set; }
+        public int? NSSQuestion24Population { get; set; }
         public string Name { get; set; }
         public int NumberOfCourses { get; set; }
         public string PUBUKPRN { get; set; }
