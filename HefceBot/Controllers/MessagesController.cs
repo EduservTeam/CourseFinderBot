@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -18,7 +19,7 @@ namespace HefceBot.Controllers
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        private IUnistatsService _unistatsService;
+        private static IUnistatsService _unistatsService;
 
         public MessagesController(IUnistatsService unistatsService)
         {
@@ -39,26 +40,32 @@ namespace HefceBot.Controllers
                         var institutionSearchTerm = completed.InstitutionSearchText;
                         var courseSearchText = completed.CourseSearchText;
 
-                        // DO JULIANS CODE
+                        IEnumerable<CourseWithInstitution> courses;
+                        if (attendanceType == AttendanceOptions.Both)
+                        {
+                            courses = _unistatsService.GetTopCourses(institutionSearchTerm, courseSearchText);
+                        }
+                        else
+                        {
+                            courses = _unistatsService.GetTopCourses(institutionSearchTerm, courseSearchText, attendanceType);
+                        }
 
-                        await context.PostAsync("Done");
+                        string x = $"Try these course suggestions {string.Join(" ", courses.Select(c => c.WebUrl ?? ""))}";
+
+                        await context.PostAsync(x);
                     }
                     catch (FormCanceledException<HefceUserSearchRequest> e)
                     {
-
                     }
                 });
-
         }
-
-
 
 
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
-        public async Task<Message> Post([FromBody]Message message)
+        public async Task<Message> Post([FromBody] Message message)
         {
             if (message.Type == "Message")
             {
@@ -84,7 +91,6 @@ namespace HefceBot.Controllers
                 }
 
                 return await Conversation.SendAsync(message, MakeRootDialog);
-
 
 
             }

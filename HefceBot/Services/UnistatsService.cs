@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using Chronic;
+using HefceBot.Controllers;
 using HefceBot.Models;
 
 namespace HefceBot.Services
@@ -35,7 +36,7 @@ namespace HefceBot.Services
 
         public IEnumerable<Institution> GetInstitutions()
         {
-            var response = _client.GetAsync("Institutions?pageSize=1000").Result;
+            var response = _client.GetAsync("Institutions?pageSize=10").Result;
 
             return response.IsSuccessStatusCode 
                 ? response.Content.ReadAsAsync<IEnumerable<Institution>>().Result 
@@ -53,7 +54,7 @@ namespace HefceBot.Services
 
         public IEnumerable<Course> GetCoursesForInstitution(string pubukprn)
         {
-            var response = _client.GetAsync($"Institution/{pubukprn}/Courses?pageSize=1000").Result;
+            var response = _client.GetAsync($"Institution/{pubukprn}/Courses?pageSize=100").Result;
 
             return response.IsSuccessStatusCode
                 ? response.Content.ReadAsAsync<IEnumerable<Course>>().Result
@@ -63,6 +64,24 @@ namespace HefceBot.Services
         public IEnumerable<CourseWithInstitution> GetAllCourses()
         {
             return _cacheService.GetOrSet<IEnumerable<CourseWithInstitution>>("AllCourses", GetAllCoursesFromApi);
+        }
+
+        public IEnumerable<CourseWithInstitution> GetTopCourses(string institutionSearchTerm, string courseSearchText)
+        {
+            return GetAllCourses()
+                .Where(c => c.Title.Contains(courseSearchText) &&
+                            c.Institution.Name.Contains(institutionSearchTerm))
+                .Take(5);
+        }
+
+        public IEnumerable<CourseWithInstitution> GetTopCourses(string institutionSearchTerm, string courseSearchText, AttendanceOptions? attendanceType)
+        {
+            return
+                GetAllCourses()
+                    .Where(c => c.Title.Contains(courseSearchText) &&
+                                c.Institution.Name.Contains(institutionSearchTerm) &&
+                                c.KisMode == attendanceType.ToString())
+                    .Take(5);
         }
 
         private IEnumerable<CourseWithInstitution> GetAllCoursesFromApi()
