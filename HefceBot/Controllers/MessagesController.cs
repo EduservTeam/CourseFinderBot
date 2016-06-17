@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using HefceBot.Models;
 using HefceBot.Services;
 using Microsoft.Bot.Connector;
 //using Microsoft.Bot.Connector.Utilities;
@@ -46,6 +47,7 @@ namespace HefceBot.Controllers
                 //int length = (message.Text ?? string.Empty).Length;
                 // return our reply to the user
                 //return message.CreateReplyMessage($"You sent {length} characters");
+                var responseFromLewis = await LuisResponse.ParseUserInput(message.Text);
                 return await Conversation.SendAsync(message, MakeRootDialog);
 
             }

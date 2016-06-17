@@ -27,8 +27,8 @@ namespace HefceBot
                 if (msg.IsSuccessStatusCode)
                 {
                     var jsonResponse = await msg.Content.ReadAsStringAsync();
-                    var _Data = JsonConvert.DeserializeObject<UniLuis>(jsonResponse);
-                    return _Data;
+                    var data = JsonConvert.DeserializeObject<UniLuis>(jsonResponse);
+                    return data;
                 }
             }
             return null;
