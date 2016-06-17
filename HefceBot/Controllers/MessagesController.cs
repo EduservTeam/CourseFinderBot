@@ -24,7 +24,7 @@ namespace HefceBot.Controllers
             _unistatsService = unistatsService;
         }
 
-        internal static IDialog<SandwichOrder> MakeRootDialog()
+        internal static IDialog<HefceUserSearchRequest> MakeRootDialog()
         {
 
             return Chain.From(() => FormDialog.FromForm(HefceUserSearchRequest.BuildForm));
