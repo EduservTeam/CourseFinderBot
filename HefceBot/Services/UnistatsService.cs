@@ -36,7 +36,7 @@ namespace HefceBot.Services
 
         public IEnumerable<Institution> GetInstitutions()
         {
-            var response = _client.GetAsync("Institutions?pageSize=10").Result;
+            var response = _client.GetAsync("Institutions?pageSize=1000").Result;
 
             return response.IsSuccessStatusCode 
                 ? response.Content.ReadAsAsync<IEnumerable<Institution>>().Result 
@@ -54,7 +54,7 @@ namespace HefceBot.Services
 
         public IEnumerable<Course> GetCoursesForInstitution(string pubukprn)
         {
-            var response = _client.GetAsync($"Institution/{pubukprn}/Courses?pageSize=100").Result;
+            var response = _client.GetAsync($"Institution/{pubukprn}/Courses?pageSize=1000").Result;
 
             return response.IsSuccessStatusCode
                 ? response.Content.ReadAsAsync<IEnumerable<Course>>().Result
@@ -69,19 +69,20 @@ namespace HefceBot.Services
         public IEnumerable<CourseWithInstitution> GetTopCourses(string institutionSearchTerm, string courseSearchText)
         {
             return GetAllCourses()
-                .Where(c => c.Title.Contains(courseSearchText) &&
-                            c.Institution.Name.Contains(institutionSearchTerm))
+                .Where(c => c.Title.IndexOf(courseSearchText, StringComparison.InvariantCultureIgnoreCase) >= 0 &&
+                            c.Institution.Name.IndexOf(institutionSearchTerm,
+                                StringComparison.InvariantCultureIgnoreCase) >= 0)
                 .Take(5);
         }
 
         public IEnumerable<CourseWithInstitution> GetTopCourses(string institutionSearchTerm, string courseSearchText, AttendanceOptions? attendanceType)
         {
-            return
-                GetAllCourses()
-                    .Where(c => c.Title.Contains(courseSearchText) &&
-                                c.Institution.Name.Contains(institutionSearchTerm) &&
-                                c.KisMode == attendanceType.ToString())
-                    .Take(5);
+            return GetAllCourses()
+                .Where(c => c.Title.IndexOf(courseSearchText, StringComparison.InvariantCultureIgnoreCase) >= 0 &&
+                            c.Institution.Name.IndexOf(institutionSearchTerm,
+                                StringComparison.InvariantCultureIgnoreCase) >= 0 &&
+                            c.KisMode == attendanceType.ToString())
+                .Take(5);
         }
 
         private IEnumerable<CourseWithInstitution> GetAllCoursesFromApi()
